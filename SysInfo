@@ -1,0 +1,89 @@
+background yes
+use_xft yes
+#xftfont HandelGotD:size=9
+xftfont Courier 10 Pitch:size=8
+xftalpha 0.5
+update_interval 2.0
+total_run_times 0
+own_window yes
+#own_window_type standard
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+own_window_argb_visual yes
+double_buffer yes
+minimum_size 145 900
+maximum_width 145
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders yes
+default_color white
+default_shade_color red
+default_outline_color green
+alignment top_right
+gap_x 6
+gap_y 0
+no_buffers yes
+uppercase no
+cpu_avg_samples 2
+override_utf8_locale no
+if_up_strictness address
+
+color0 DD3A21
+
+TEXT
+${color white}
+${font Ubuntu:bold:size=8}${color0}${execi 3600 lsb_release -d -s} (${execi 3600 lsb_release -s -c})${font}${color}
+$nodename $alignr $freq_g GHz
+$sysname $alignr $kernel
+Uptime $alignr $uptime
+Battery $alignr ${battery BAT1}
+
+${font Ubuntu:bold:size=8}${color0}Sysinfo${font}${color}
+Load $alignr $loadavg
+Core 0 ${cpu cpu0}% ${cpubar cpu0}
+Core 1 ${cpu cpu1}% ${cpubar cpu1}
+Core 3 ${cpu cpu2}% ${cpubar cpu2}
+Core 4 ${cpu cpu3}% ${cpubar cpu3}
+${cpugraph 16}
+Mem: ${alignc}${mem}/${memmax}${alignr}${memperc}%
+${membar 6}
+
+${font Ubuntu:bold:size=8}${color0}Top${font}${color}
+${top name 1} ${alignr} ${top cpu 1}
+${top name 2} ${alignr} ${top cpu 2}
+${top name 3} ${alignr} ${top cpu 3}
+${top name 4} ${alignr} ${top cpu 4}
+
+${font Ubuntu:bold:size=8}${color0}Disks${font}${color}
+/ ${alignr}${fs_used_perc /} %
+/home ${alignr}${fs_used_perc /home} %
+
+${font Ubuntu:bold:size=8}${color0}Network${font}${color}
+public $alignr ${execi 10 cat /etc/publicip}
+${if_up eth0}eth0 $alignr ${addr eth0}${endif}${if_up ppp0}ppp0 $alignr ${addr ppp0}${endif}
+${if_up wlan0}wlan0 $alignr ${addr wlan0}
+SSID $alignr ${wireless_essid wlan0}
+Bitrate $alignr ${wireless_bitrate wlan0}
+${endif}${if_up eth0}
+Download ${goto 60} eth0 ${alignr} ${downspeed eth0}
+Upload ${goto 60} eth0 ${alignr} ${upspeed eth0}
+${downspeedgraph eth0 16,140 0000ff 00ff00} ${alignr}${upspeedgraph eth0 16,140 0000ff 00ff00}
+${endif}
+${if_up wlan0}
+Download ${goto 60} wlan0 ${alignr} ${downspeed wlan0}
+Upload ${goto 60} wlan0 ${alignr} ${upspeed wlan0}
+${downspeedgraph wlan0 16,140 0000ff 00ff00} ${alignr}${upspeedgraph wlan0 16,140 0000ff 00ff00}
+${endif}
+${if_up ppp0}
+Download ${goto 60} ppp0 ${alignr} ${downspeed ppp0}
+Upload ${goto 60} ppp0 ${alignr} ${upspeed ppp0}
+${downspeedgraph ppp0 16,140 0000ff 00ff00} ${alignr}${upspeedgraph ppp0 16,140 0000ff 00ff00}
+${endif}
+${if_existing /var/log/snap.log}
+${font Ubuntu:bold:size=8}${color0}Backup${font}${color}
+${if_running /usr/local/bin/snap} 
+${exec tail -1 /var/log/snap.log | grep -q ^End && (tail -1 /var/log/snap.log | sed 's/End : //' ) || ( echo `tail -2 /var/log/snap.log | grep -v % | grep -v Executing | tail -1 | cut -c -20`...)}
+${else}${execi 3600 tail -1 /var/log/snap.log | sed 's/End : //'}
+${endif}${else}${font Ubuntu:bold:size=8}${color0}No Snap Backup !${font}${color}
+${endif}
