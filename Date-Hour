@@ -71,7 +71,7 @@ alignment bl
 gap_x 50
 gap_y 20
 minimum_size 250 250
-maximum_width 280
+maximum_width 500
 
 default_color FFFFFF
 
@@ -79,4 +79,4 @@ default_color FFFFFF
 TEXT
 ${voffset 8}${font Ubuntu Light:size=25}${time %A}${font}${voffset -8}
 ${voffset 8}${font Ubuntu Light:size=25}${time %e %b}${font}${voffset -8}
-${voffset 8}${font Ubuntu Light:size=80}${time %H:%M %p}${font}${voffset -8}
+${voffset 8}${font Ubuntu Light:size=80}${time %H:%M}${font Ubuntu Light:size=32}${time %S}${font}${voffset -8}
